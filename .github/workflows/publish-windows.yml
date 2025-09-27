@@ -1,6 +1,5 @@
 name: Build & Publish (win-x64)
 
-# Запускаем вручную и при пуше в main и при создании тега v*
 on:
   workflow_dispatch: {}
   push:
@@ -31,11 +30,31 @@ jobs:
 
       - name: Prepare release folder
         run: |
-          mkdir release || true
-          cp -r publish/win-x64/* release/ || true
-          # include config sample (if exists) and README
-          if [ -f config.sample.json ]; then cp config.sample.json release/config.sample.json; fi
-          cp README.md release/ || true
+          # create release folder (force)
+          New-Item -ItemType Directory -Force -Path release | Out-Null
+
+          if (Test-Path -Path publish/win-x64) {
+            Copy-Item -Path (Join-Path 'publish/win-x64' '*') -Destination release -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+          if (Test-Path -Path config.sample.json) {
+            Copy-Item -Path config.sample.json -Destination (Join-Path 'release' 'config.sample.json') -Force
+          }
+
+          if (Test-Path -Path README.md) {
+            Copy-Item -Path README.md -Destination (Join-Path 'release' 'README.md') -Force
+          }
+          
+          if (Test-Path -Path templates) {
+            Copy-Item -Path templates -Destination release\templates -Recurse -Force -ErrorAction SilentlyContinue
+          }
+          
+          if (Test-Path -Path general) {
+          Copy-Item -Path general -Destination release\general -Recurse -Force -ErrorAction SilentlyContinue
+          }
+          
+          if (Test-Path -Path LICENSE) { Copy-Item -Path LICENSE -Destination release\LICENSE -Force }
+        shell: pwsh
 
       - name: Zip release
         run: |
