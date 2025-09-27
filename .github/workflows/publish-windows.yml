@@ -1,5 +1,9 @@
 name: Build & Publish (win-x64)
 
+permissions:
+  contents: write
+  packages: write
+
 on:
   workflow_dispatch: {}
   push:
