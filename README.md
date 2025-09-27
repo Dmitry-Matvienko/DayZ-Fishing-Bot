@@ -4,7 +4,7 @@
 ## What the bot does
 
 - Automatically “catches” fish: holds down the left mouse button, then opens the inventory, searches for templates of fish on the screen, selects an item, checks the condition of the fishing rod, hooks the bait if necessary, and continues the cycle.
-- Mouse movements are simulated smoothly __(Bezier __+__ __jitter)__ and timings are __randomized__ to **mimic human behavior**.
+- Mouse movements are simulated smoothly **(Bezier + jitter)** and timings are __randomized__ to **mimic human behavior**.
 
 ## Features
 
@@ -27,8 +27,8 @@
 7. To stop, press `Ctrl+C` in the console or close the console window.
 8. If you’re experiencing problems, see below `Important` and `Known issues and solutions`
 
-## Important (Graphics / Settings / Pre-flight checks)
-
+## Important (Graphics / Settings / Pre-flight checks)  
+  
 Before starting, make sure:
 
 - **Game graphics settings:** the bot is very sensetive to screen resolution. You should have `1920x1080x32` and screen scalability `on your PC = 100%` (usually the default setting). Preferable: windowed/borderless mode (Borderless Window) or “Windowed” — this makes it easier to take screenshots.
@@ -38,7 +38,8 @@ Before starting, make sure:
 
 ## Known issues and solutions
 
-**Templates have a small "score"/false positives**
+**Templates have a small "score"/false positives**  
+  
 Make sure that:
 - The template is a screenshot from the same graphics configuration (resolution, UI scale).
   - `config.json` has an right `MatchThreshold`(0.82) (decrease it if the bot cannot find anythingю. Increase it if there are false positives).
@@ -51,7 +52,8 @@ Make sure that:
 **Errors due to missing DLLs (vcruntime140.dll, etc.)**
 - Install `Microsoft Visual C++ Redistributable (x86/x64)` from the Microsoft website.
 
-**The bot doesn't press LMB**
+**The bot doesn't press LMB**  
+  
 In rare cases, the bot may not click the left mouse button. To resolve this issue:
 - Restart `DayzFishingBot.exe`
 - Most often, this is due to the fishing rod being in a “heavily damaged” state. Replace the fishing rod with a new one.
