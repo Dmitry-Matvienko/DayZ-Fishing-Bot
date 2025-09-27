@@ -1,10 +1,10 @@
 # DayZ Fishing Bot — Unofficial (C# with OpenCvSharp)
-# This project is unofficial and not affiliated with Bohemia Interactive. Use at your own risk.
+# This project is unofficial and not affiliated with Bohemia Interactive. Use at your own risk. The author is not responsible for bans.
 
 ## What the bot does
 
 - Automatically “catches” fish: holds down the left mouse button, then opens the inventory, searches for templates of fish on the screen, selects an item, checks the condition of the fishing rod, hooks the bait if necessary, and continues the cycle.
-- Mouse movements are simulated smoothly (Bezier + jitter), and timings are randomized to mimic human behavior.
+- Mouse movements are simulated smoothly __(Bezier __+__ __jitter)__ and timings are __randomized__ to **mimic human behavior**.
 
 ## Features
 
@@ -20,11 +20,12 @@
 2. Unzip it into any folder.
 3. Edit `config.json` if necessary.
 4. There are `templates/` and `general/` folders. 
-	- **Replace the screenshots there**
+	- **Replace the screenshots there** if necessary.
 	- Add new screenshots in `templates/` folder if the server uses other fish. The name of the screenshot of fish does not matter. Name of screenshots of `general/` are important.
 5. Change the inventory button to `Mouse button 4` instead of `Tab`.
 6. Run `DayzFishingBot.exe`. Make sure the game window is active on the main monitor and the cursor is visible in it.
 7. To stop, press `Ctrl+C` in the console or close the console window.
+8. If you’re experiencing problems, see below `Important` and `Known issues and solutions`
 
 ## Important (Graphics / Settings / Pre-flight checks)
 
