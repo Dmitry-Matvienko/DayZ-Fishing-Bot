@@ -18,7 +18,7 @@
 
 1. Download the release from GitHub → **Releases** → select the archive `dayz-fishing-bot-win-x64.zip`.
 2. Unzip it into any folder.
-3. Edit `config.json` if necessary.
+3. Edit `config.json` if necessary. See `CONFIG_EXPLAIN.txt` to read about each parameter.
 4. There are `templates/` and `general/` folders. 
 	- **Replace the screenshots there** if necessary.
 	- Add new screenshots in `templates/` folder if the server uses other fish. The name of the screenshot of fish does not matter. Name of screenshots of `general/` are important.

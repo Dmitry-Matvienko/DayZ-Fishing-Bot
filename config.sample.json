@@ -1,0 +1,23 @@
+{
+  "TemplatesFolder": "templates",
+  "GeneralFolder": "general",
+  "MatchThreshold": 0.82,
+  "HoldLeftMinMs": 25000,
+  "HoldLeftMaxMs": 30000,
+  "DelayAfterHoldMinMs": 250,
+  "DelayAfterHoldMaxMs": 600,
+  "JitterAmpPx": 6,
+  "MoveDurationMinMs": 120,
+  "MoveDurationMaxMs": 380,
+  "DelayBetweenCyclesMinMs": 400,
+  "DelayBetweenCyclesMaxMs": 900,
+  "RodReadyTemplate": "rod_ready.png",
+  "HookNoBaitTemplate": "hook_no_bait.png",
+  "HookNoBaitTemplateDestroyed": "hook_no_bait_destroyed.png"
+  "HookEmptyTemplate": "hook_empty.png",
+  "BaitTemplateName": "bait.png",
+  "TrueRodReadyTemplate": "rod_true.png",
+  "FalseRodReadyTemplate": "rod_false.png",
+  "HookEmptyYOffset": -45,
+  "OpenInvClickDownMs": 20
+}

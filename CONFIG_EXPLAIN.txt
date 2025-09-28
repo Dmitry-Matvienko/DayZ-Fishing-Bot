@@ -1,0 +1,45 @@
+Configuration (explanation of parameters)
+
+This file explains the parameters in "config.json".
+
+1) Open "config.json" in any text editor.
+2) Change the necessary parameters (see description below).
+3) Start the bot.
+
+Key parameters
+
+> Note: All times are in milliseconds (ms) unless otherwise specified.
+
+  "TemplatesFolder": "templates" - folder with templates of fish/items that the bot will search for on the floor. Place .png/.jpg/.jpeg/.bmp files there.
+  
+  "GeneralFolder": "general" - folder with common templates (rod status, bait, true/false checks, etc.).
+  
+  "MatchThreshold": 0.82 - matching threshold for template matching. The higher the value, the stricter the search.
+   Recommendation: if the bot often fails to find objects, decrease the value (e.g., 0.78); if there are frequent false positives, increase the value (0.86).
+  
+  "HoldLeftMinMs": 25000, "HoldLeftMaxMs": 30000 - range of random LMB hold time when "catching". The script will select a random value from the range.
+  
+  "DelayAfterHoldMinMs": 250, "DelayAfterHoldMaxMs": 600 - pause after releasing the LMB before opening the inventory.
+  
+  "JitterAmpPx": 6 - maximum jitter when hovering over the target point (to make clicks look more natural).
+   Tip: Reduce this value if the cursor sometimes misses the interface.
+  
+  "MoveDurationMinMs": 120, "MoveDurationMaxMs": 380 - the duration of cursor movement to the objects (random within the range). The lower the value, the sharper the movement.
+  
+  "DelayBetweenCyclesMinMs": 400, "DelayBetweenCyclesMaxMs": 900 - pause between the bot's main cycles(after all actions).
+  
+  "RodReadyTemplate": "rod_ready.png" - the name of the template that indicates that there is already bait on the rod (used for guidance and further checks).
+  "HookEmptyTemplate": "hook_empty.png" - template where there is no bait and hook.
+  "BaitTemplateName": "bait.png" - the template for the bait itself. Used to search the inventory and drag it onto the hook.
+  
+  For additional verification of the bait condition (True/False). If `True` — the bait is intact (do not change anything). If `False` — the bait is damaged/unsuitable → the bot will discard it.
+  "TrueRodReadyTemplate": "rod_true.png",
+  "FalseRodReadyTemplate": "rod_false.png",
+  
+  Templates corresponding to hook states (hook wothout bait)
+  "HookNoBaitTemplate": "hook_no_bait.png",
+  "HookNoBaitTemplateDestroyed": "hook_no_bait_destroyed.png"
+  
+  "HookEmptyYOffset": -45 - Y-axis correction when dragging bait for "hook_no_bait/hook_no_bait_destroyed" (dragging slightly above the center of the template).
+  
+  "OpenInvClickDownMs": 20 - duration of Mouse4 click (open/close inventory).

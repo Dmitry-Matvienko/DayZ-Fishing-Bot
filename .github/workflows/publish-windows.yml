@@ -58,6 +58,7 @@ jobs:
           }
           
           if (Test-Path -Path LICENSE) { Copy-Item -Path LICENSE -Destination release\LICENSE -Force }
+          if (Test-Path -Path 'CONFIG_EXPLAIN.txt') { Copy-Item -Path 'CONFIG_EXPLAIN.txt' -Destination 'release/CONFIG_EXPLAIN.txt' -Force }
         shell: pwsh
 
       - name: Zip release
