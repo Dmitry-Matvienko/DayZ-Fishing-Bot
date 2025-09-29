@@ -33,7 +33,7 @@ class ConfigData
     public string BaitTemplateName { get; set; } = "bait.png";
     public string TrueRodReadyTemplate { get; set; } = "rod_true.png";
     public string FalseRodReadyTemplate { get; set; } = "rod_false.png";
-
+    public string StartFishingTemplate { get; set; } = "start_fishing.png";
     // Drag-and-drop offset (upward)
     public int HookEmptyYOffset { get; set; } = -45;
 

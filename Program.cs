@@ -10,8 +10,8 @@ class Program
             e.Cancel = true; // prevent immediate termination
         };
 
-        Console.WriteLine("Starting fishing bot in 5 seconds...");
-        System.Threading.Thread.Sleep(5000);
+        Console.WriteLine("Starting fishing bot in 10 seconds...Open DayZ");
+        System.Threading.Thread.Sleep(10000);
 
         var config = ConfigData.Load("config.json");
         var bot = new FishingBot(config);

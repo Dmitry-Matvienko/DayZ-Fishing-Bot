@@ -18,6 +18,7 @@
   "BaitTemplateName": "bait.png",
   "TrueRodReadyTemplate": "rod_true.png",
   "FalseRodReadyTemplate": "rod_false.png",
+  "StartFishingTemplate": "start_fishing.png",
   "HookEmptyYOffset": -45,
   "OpenInvClickDownMs": 20
 }

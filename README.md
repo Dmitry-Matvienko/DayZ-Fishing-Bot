@@ -52,12 +52,6 @@ Make sure that:
 **Errors due to missing DLLs (vcruntime140.dll, etc.)**
 - Install `Microsoft Visual C++ Redistributable (x86/x64)` from the Microsoft website.
 
-**The bot doesn't press LMB**  
-  
-In rare cases, the bot may not click the left mouse button. To resolve this issue:
-- Restart `DayzFishingBot.exe`
-- Most often, this is due to the fishing rod being in a “heavily damaged” state. Replace the fishing rod with a new one.
-
 ## Usage
 
 - **Stopping:** Press `Ctrl+C` in the console window to stop the bot gracefully.

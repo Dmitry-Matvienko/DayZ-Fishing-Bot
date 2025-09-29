@@ -1,8 +1,9 @@
 ﻿using OpenCvSharp;
 using System;
-using System.Drawing;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 class FishingBot
 {
@@ -11,6 +12,7 @@ class FishingBot
     private readonly TemplateCache generalCache;
     private bool running = false;
     private readonly Random rnd = Random.Shared;
+   
 
     public FishingBot(ConfigData config)
     {
@@ -27,18 +29,96 @@ class FishingBot
         int cycle = 0;
         Console.WriteLine("Fishing bot started. Press Ctrl+C to stop.");
 
+        // Ensure caches exist
+        itemsCache.EnsureUpToDate();
+        generalCache.EnsureUpToDate();
+        // try to load startFishingMat once
+        
+
         while (running)
         {
             cycle++;
             Console.WriteLine($"\n--- Cycle #{cycle} ---");
+
+            // Update template caches
+            itemsCache.EnsureUpToDate();
+            generalCache.EnsureUpToDate();
 
             // Hold left mouse button for a random duration
             int holdMs = rnd.Next(cfg.HoldLeftMinMs, cfg.HoldLeftMaxMs + 1);
             Console.WriteLine($"Holding left button for {holdMs} ms...");
             InputSimulator.LeftDown();
 
+            // waiting for the end of animation
+            Thread.Sleep(rnd.Next(2000, 2500));
+
+            int attempt = 0;
+            int maxRetries = 10;
+
             try
             {
+                Mat startFishingMat = null;
+                foreach (var (gname, gmat) in generalCache.GetAll())
+                {
+                    if (string.Equals(gname, cfg.StartFishingTemplate, StringComparison.OrdinalIgnoreCase))
+                    {
+                        startFishingMat = gmat;
+                        break;
+                    }
+                }
+
+                if (startFishingMat == null)
+                {
+                    Console.WriteLine("[WARN]: start_fishing.png template not found.");
+                }
+                else
+                {
+                    // Checkand repress loop if label present after the initial cast
+                    while (running)
+                    {
+                        using (var checkScreen = TemplateMatcher.CaptureScreen())
+                        {
+                            var (pos, score) = TemplateMatcher.FindBestMatch(checkScreen, startFishingMat);
+                            Console.WriteLine($"start_fishing.png: score={score:F3}, pos={(pos == null ? "null" : pos.ToString())}");
+
+                            if (pos == null || score < cfg.MatchThreshold)
+                            {
+                                // Label not found - fishing started normally, break out and proceed to normal hold
+                                Console.WriteLine("Everything is okay, proceed to holding.");
+                                break;
+                            }
+                            else
+                            {
+                                // Label is visible - need to re-press LMB
+                                attempt++;
+                                Console.WriteLine($"Label of start_fishing.png VISIBLE - re-pressing LMB (attempt {attempt})...");
+
+                                InputSimulator.LeftUp();
+                                Thread.Sleep(rnd.Next(80, 160));
+                                InputSimulator.LeftDown();
+
+                                // in chunks so Ctrl+C stays responsive
+                                int waited = 0;
+                                int chunk = 200;
+                                int animWait = rnd.Next(2000, 2500);
+                                while (running && waited < animWait)
+                                {
+                                    int step = Math.Min(chunk, animWait - waited);
+                                    Thread.Sleep(step);
+                                    waited += step;
+                                }
+
+                                if (maxRetries > 0 && attempt >= maxRetries)
+                                {
+                                    Console.WriteLine($"[WARN]: start_fishing.png label still present after {attempt} attempts.");
+                                    break;
+                                }
+                            }
+                        }
+                    } 
+                }
+
+                // Keepinf LMB pressed for holdMs total starting from this moment
                 var sw = Stopwatch.StartNew();
                 while (running && sw.ElapsedMilliseconds < holdMs)
                 {
@@ -46,18 +126,19 @@ class FishingBot
                     int chunk = rnd.Next(200, 701);
                     Thread.Sleep(Math.Min(chunk, remaining));
                 }
+
             }
             finally
             {
                 InputSimulator.LeftUp();
             }
+
             if (!running) break;
 
             Thread.Sleep(rnd.Next(cfg.DelayAfterHoldMinMs, cfg.DelayAfterHoldMaxMs + 1));
             if (!running) break;
             Thread.Sleep(rnd.Next(400, 800));
 
-            // Open inventory (Mouse4 / XBUTTON1)
             Console.WriteLine("Opening inventory (Mouse4)...");
             InputSimulator.XButtonDown(InputSimulator.XBUTTON1);
             Thread.Sleep(cfg.OpenInvClickDownMs + rnd.Next(10, 30));
@@ -68,14 +149,10 @@ class FishingBot
 
             if (!running) break;
 
-            // Update template caches
-            itemsCache.EnsureUpToDate();
-            generalCache.EnsureUpToDate();
-
             // If no item templates, close inventory and wait
             if (itemsCache.IsEmpty())
             {
-                Console.WriteLine("No item templates found. Closing inventory and waiting.");
+                Console.WriteLine("[WARN]: No item templates found!");
                 InputSimulator.XButtonDown(InputSimulator.XBUTTON1);
                 Thread.Sleep(cfg.OpenInvClickDownMs + rnd.Next(10, 30));
                 InputSimulator.XButtonUp(InputSimulator.XBUTTON1);
@@ -109,7 +186,7 @@ class FishingBot
 
                     // Workaround: sometimes holding right-click fixes a game bug
                     int fixHoldMs = rnd.Next(1000, 1601);
-                    Console.WriteLine($"Applying fix: hold right button for {fixHoldMs} ms.");
+                    Console.WriteLine($"[Applying fix]: hold right button for {fixHoldMs} ms.");
                     InputSimulator.RightDown();
                     Thread.Sleep(fixHoldMs);
                     InputSimulator.RightUp();
@@ -158,7 +235,7 @@ class FishingBot
 
                 if (bestGeneral.pos == null || bestGeneral.score < cfg.MatchThreshold)
                 {
-                    Console.WriteLine("Rod state not recognizedю. Closing inventory.");
+                    Console.WriteLine("[WARN]: Rod state not recognizedю. Closing inventory.");
                     InputSimulator.XButtonDown(InputSimulator.XBUTTON1);
                     Thread.Sleep(cfg.OpenInvClickDownMs + rnd.Next(10, 30));
                     InputSimulator.XButtonUp(InputSimulator.XBUTTON1);
@@ -192,7 +269,7 @@ class FishingBot
                         if (trueMat != null)
                         {
                             var (posT, scoreT) = TemplateMatcher.FindBestMatch(checkScreen, trueMat);
-                            Console.WriteLine($"   Checking TrueRodReady: score={scoreT:F3}, pos={(posT == null ? "null" : posT.ToString())}");
+                            Console.WriteLine($"Checking TrueRodReady: score={scoreT:F3}, pos={(posT == null ? "null" : posT.ToString())}");
                             if (posT != null && scoreT >= cfg.MatchThreshold)
                             {
                                 Console.WriteLine("TrueRodReady found – rod is confirmed ready. Closing inventory.");
@@ -209,7 +286,7 @@ class FishingBot
                         if (falseMat != null)
                         {
                             var (posF, scoreF) = TemplateMatcher.FindBestMatch(checkScreen, falseMat);
-                            Console.WriteLine($"   Checking FalseRodReady: score={scoreF:F3}, pos={(posF == null ? "null" : posF.ToString())}");
+                            Console.WriteLine($"Checking FalseRodReady: score={scoreF:F3}, pos={(posF == null ? "null" : posF.ToString())}");
                             if (posF != null && scoreF >= cfg.MatchThreshold)
                             {
                                 Console.WriteLine("FalseRodReady found – rod is not ready. Will continue handle bait.");
@@ -246,7 +323,7 @@ class FishingBot
 
                 if (baitMat == null)
                 {
-                    Console.WriteLine($"Bait '{cfg.BaitTemplateName}' not found in general folder.");
+                    Console.WriteLine($"[WARN]: Bait '{cfg.BaitTemplateName}' not found in general folder.");
                 }
                 else
                 {
@@ -303,7 +380,7 @@ class FishingBot
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in HandleRodWhenNoFish: {ex.Message}");
+            Console.WriteLine($"[ERROR]: Error in HandleRodWhenNoFish: {ex.Message}");
         }
     }
 
@@ -337,9 +414,8 @@ class FishingBot
 
             if (doPickup)
             {
-                // Press LMB (pickup)
                 InputSimulator.LeftDown();
-                Thread.Sleep(rnd.Next(70, 150)); // small holding for pickup
+                Thread.Sleep(rnd.Next(70, 150));
             }
 
             // Smooth move to drop zone
@@ -348,7 +424,6 @@ class FishingBot
 
             if (doPickup)
             {
-                // Release LMB (drop)
                 InputSimulator.LeftUp();
                 Console.WriteLine("Broken bait thrown away.");
                 Thread.Sleep(rnd.Next(30, 90));
@@ -356,7 +431,6 @@ class FishingBot
         }
         finally
         {
-            // lways release left button in case of exception
             try { InputSimulator.LeftUp(); } catch { }
         }
     }

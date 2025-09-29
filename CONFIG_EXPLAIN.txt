@@ -39,6 +39,8 @@ Key parameters
   Templates corresponding to hook states (hook wothout bait)
   "HookNoBaitTemplate": "hook_no_bait.png",
   "HookNoBaitTemplateDestroyed": "hook_no_bait_destroyed.png"
+
+  "StartFishingTemplate": "start_fishing.png" - A label that appears when you hover over the water, which says “Fish [Hold]”
   
   "HookEmptyYOffset": -45 - Y-axis correction when dragging bait for "hook_no_bait/hook_no_bait_destroyed" (dragging slightly above the center of the template).
   
