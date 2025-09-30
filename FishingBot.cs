@@ -1,9 +1,6 @@
-﻿using OpenCvSharp;
-using System;
+﻿using Dayz_Fishing_Bot;
+using OpenCvSharp;
 using System.Diagnostics;
-using System.Drawing;
-using System.Threading;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 class FishingBot
 {
@@ -28,12 +25,11 @@ class FishingBot
         running = true;
         int cycle = 0;
         Console.WriteLine("Fishing bot started. Press Ctrl+C to stop.");
+        ConsoleSound.PlaySound(SoundType.Start);
 
         // Ensure caches exist
         itemsCache.EnsureUpToDate();
         generalCache.EnsureUpToDate();
-        // try to load startFishingMat once
-        
 
         while (running)
         {
@@ -44,9 +40,8 @@ class FishingBot
             itemsCache.EnsureUpToDate();
             generalCache.EnsureUpToDate();
 
-            // Hold left mouse button for a random duration
             int holdMs = rnd.Next(cfg.HoldLeftMinMs, cfg.HoldLeftMaxMs + 1);
-            Console.WriteLine($"Holding left button for {holdMs} ms...");
+            Console.WriteLine($"Holding left mouse button for {holdMs} ms...");
             InputSimulator.LeftDown();
 
             // waiting for the end of animation
@@ -70,6 +65,7 @@ class FishingBot
                 if (startFishingMat == null)
                 {
                     Console.WriteLine("[WARN]: start_fishing.png template not found.");
+                    ConsoleSound.PlaySound(SoundType.Warn);
                 }
                 else
                 {
@@ -111,6 +107,7 @@ class FishingBot
                                 if (maxRetries > 0 && attempt >= maxRetries)
                                 {
                                     Console.WriteLine($"[WARN]: start_fishing.png label still present after {attempt} attempts.");
+                                    ConsoleSound.PlaySound(SoundType.Warn);
                                     break;
                                 }
                             }
@@ -153,6 +150,7 @@ class FishingBot
             if (itemsCache.IsEmpty())
             {
                 Console.WriteLine("[WARN]: No item templates found!");
+                ConsoleSound.PlaySound(SoundType.Warn);
                 InputSimulator.XButtonDown(InputSimulator.XBUTTON1);
                 Thread.Sleep(cfg.OpenInvClickDownMs + rnd.Next(10, 30));
                 InputSimulator.XButtonUp(InputSimulator.XBUTTON1);
@@ -236,6 +234,7 @@ class FishingBot
                 if (bestGeneral.pos == null || bestGeneral.score < cfg.MatchThreshold)
                 {
                     Console.WriteLine("[WARN]: Rod state not recognizedю. Closing inventory.");
+                    ConsoleSound.PlaySound(SoundType.Warn);
                     InputSimulator.XButtonDown(InputSimulator.XBUTTON1);
                     Thread.Sleep(cfg.OpenInvClickDownMs + rnd.Next(10, 30));
                     InputSimulator.XButtonUp(InputSimulator.XBUTTON1);
@@ -324,6 +323,7 @@ class FishingBot
                 if (baitMat == null)
                 {
                     Console.WriteLine($"[WARN]: Bait '{cfg.BaitTemplateName}' not found in general folder.");
+                    ConsoleSound.PlaySound(SoundType.Warn);
                 }
                 else
                 {
@@ -381,6 +381,7 @@ class FishingBot
         catch (Exception ex)
         {
             Console.WriteLine($"[ERROR]: Error in HandleRodWhenNoFish: {ex.Message}");
+            ConsoleSound.PlaySound(SoundType.Error);
         }
     }
 

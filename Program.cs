@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Dayz_Fishing_Bot;
 
 class Program
 {
@@ -8,6 +8,7 @@ class Program
         {
             Console.WriteLine("Stopping (Ctrl+C)...");
             e.Cancel = true; // prevent immediate termination
+            ConsoleSound.PlaySound(SoundType.Exit, runInBackground: false);
         };
 
         Console.WriteLine("Starting fishing bot in 10 seconds...Open DayZ");

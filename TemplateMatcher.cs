@@ -1,6 +1,4 @@
 ﻿using OpenCvSharp;
-using System.Drawing;
-using System.IO;
 
 static class TemplateMatcher
 {

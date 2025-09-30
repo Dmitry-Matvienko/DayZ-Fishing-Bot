@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-static class MouseMovement
+﻿static class MouseMovement
 {
     // Smoothly move the cursor along a Bezier curve with random jitter
     public static void SmoothMoveTo(int targetX, int targetY, int minDurationMs, int maxDurationMs)
@@ -64,12 +61,10 @@ static class MouseMovement
             Thread.Sleep(stepMs);
         }
 
-        // Ensure final position and a small random pause
         InputSimulator.TrySetCursorPos(targetX, targetY);
         Thread.Sleep(10 + Random.Shared.Next(0, 50));
     }
 
-    // Move to (x,y) and perform a double-click using randomized delays.
     public static void DoubleClickAt(int x, int y, ConfigData cfg)
     {
         SmoothMoveTo(x, y, cfg.MoveDurationMinMs, cfg.MoveDurationMaxMs);

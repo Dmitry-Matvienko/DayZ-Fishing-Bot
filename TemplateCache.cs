@@ -1,4 +1,5 @@
-﻿using OpenCvSharp;
+﻿using Dayz_Fishing_Bot;
+using OpenCvSharp;
 
 class TemplateCache
 {
@@ -47,6 +48,7 @@ class TemplateCache
             catch (Exception ex)
             {
                 Console.WriteLine($"[TemplateCache] Failed to load '{path}': {ex.Message}");
+                ConsoleSound.PlaySound(SoundType.Error);
             }
         }
 

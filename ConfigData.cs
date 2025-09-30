@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Dayz_Fishing_Bot;
+using System.Text.Json;
 
 class ConfigData
 {
@@ -68,6 +69,7 @@ class ConfigData
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading '{path}': {ex.Message}");
+            ConsoleSound.PlaySound(SoundType.Error);
             Console.WriteLine("Using default configuration values.");
             var defaultCfg = new ConfigData();
             try { Save(defaultCfg, path); } catch { }
